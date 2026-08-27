@@ -1,0 +1,26 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Pytest cache
+.pytest_cache/
+
+# Environment variables / secrets
+.env
+
+# Raw and processed datasets
+data/raw/
+data/processed/
+
+# Trained model checkpoints
+models/
+*.pth
+*.pt
+
+# Editor / OS files
+.vscode/
+.DS_Store
+Thumbs.db
