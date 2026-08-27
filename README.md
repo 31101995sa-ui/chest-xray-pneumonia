@@ -65,6 +65,47 @@ This is an educational/research dataset and may contain acquisition-specific art
 
 The model may potentially learn such shortcuts instead of medically meaningful image features. This risk will be considered during error analysis and model interpretation.
 
+### Train / Validation / Test Strategy
+
+The original training split was used to create a new reproducible
+group-aware validation subset.
+
+Final experimental split:
+
+| Split | NORMAL | PNEUMONIA | Total |
+|---|---:|---:|---:|
+| Train | 1,140 | 3,294 | 4,434 |
+| Validation | 201 | 581 | 782 |
+| Test | 234 | 390 | 624 |
+| Legacy validation | 8 | 8 | 16 |
+
+The new validation set contains approximately 15% of the original
+training images.
+
+Important safeguards:
+
+- Random seed is fixed at `42`.
+- PNEUMONIA images are grouped using the `personN` identifier from filenames.
+- NORMAL images are grouped using their `IM` / `NORMAL2-IM` identifier.
+- Related images from the same inferred group are not split between train and validation.
+- Exact SHA-256 overlap between the new train and validation sets is zero.
+- The original test set is preserved unchanged for final evaluation.
+- The original 16-image validation split is retained as `legacy_val`
+  and is not used for model selection.
+
+The exact split is stored in:
+
+`data/splits/split_manifest.csv`
+
+Dataset auditing also found exact duplicate images inside individual
+source splits, but no exact duplicates across train, validation, and test,
+and no exact duplicate with conflicting NORMAL/PNEUMONIA labels.
+
+A 64-bit perceptual dHash experiment produced many collisions between
+different chest X-ray images, including images from different classes.
+Therefore dHash is retained only as an exploratory audit experiment and
+is not used as an automatic deduplication criterion.
+
 ## Deadline
 
 September 3, 2026.
