@@ -180,7 +180,7 @@ def main() -> None:
 
                 rows.append(
                     {
-                        "relative_path": str(relative_path),
+                        "relative_path": relative_path.as_posix(),
                         "class": class_name,
                         "label": str(
                             CLASS_LABELS[class_name]
@@ -218,7 +218,7 @@ def main() -> None:
 
             rows.append(
                 {
-                    "relative_path": str(relative_path),
+                    "relative_path": relative_path.as_posix(),
                     "class": class_name,
                     "label": str(
                         CLASS_LABELS[class_name]
@@ -260,7 +260,7 @@ def main() -> None:
 
             rows.append(
                 {
-                    "relative_path": str(relative_path),
+                    "relative_path": relative_path.as_posix(),
                     "class": class_name,
                     "label": str(
                         CLASS_LABELS[class_name]
