@@ -118,6 +118,39 @@ class ChestXRayDataset(Dataset):
         return image_tensor, label
 
 
+def calculate_class_weights(
+    dataset: ChestXRayDataset,
+) -> torch.Tensor:
+    class_counts = {
+        0: 0,
+        1: 0,
+    }
+
+    for record in dataset.records:
+        label = record["label"]
+        class_counts[label] += 1
+
+    total_samples = len(dataset)
+    num_classes = len(class_counts)
+
+    weights = []
+
+    for class_index in range(num_classes):
+        class_count = class_counts[class_index]
+
+        class_weight = (
+            total_samples
+            / (num_classes * class_count)
+        )
+
+        weights.append(class_weight)
+
+    return torch.tensor(
+        weights,
+        dtype=torch.float32,
+    )
+
+
 def create_data_loader(
     target_split: str,
     batch_size: int = BATCH_SIZE,
