@@ -1,0 +1,97 @@
+{
+  "experiment_id": "resnet18_baseline_repro_001",
+  "status": "completed",
+  "provenance": {
+    "git_commit": "c3ac50574c237addc6ab5921a1291f498e30e816",
+    "manifest_sha256": "0216660DC53CC9F196790FB8D342BC82BE9420B74184E93942E2F7B8258D52D1",
+    "random_seed": 42
+  },
+  "model": {
+    "architecture": "resnet18",
+    "pretrained": true,
+    "pretrained_source": "ImageNet weights via torchvision",
+    "freeze_backbone": true,
+    "total_parameters": 11177538,
+    "trainable_parameters": 1026,
+    "num_classes": 2
+  },
+  "dataset": {
+    "train_samples": 4434,
+    "validation_samples": 782,
+    "sealed_test_samples": 624
+  },
+  "training": {
+    "epochs": 5,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "optimizer": "AdamW",
+    "loss": "CrossEntropyLoss",
+    "device": "cuda",
+    "gpu": "Tesla T4",
+    "training_time_seconds": 456.2819689539999
+  },
+  "environment": {
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "platform": "Kaggle"
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.19295950268215029,
+      "train_accuracy": 0.9271538114569238,
+      "val_loss": 0.14205988780464357,
+      "val_accuracy": 0.9514066496163683
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.11782155978717296,
+      "train_accuracy": 0.9562471808750563,
+      "val_loss": 0.11555411614229917,
+      "val_accuracy": 0.9616368286445013
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.09907259228338945,
+      "train_accuracy": 0.9648173207036536,
+      "val_loss": 0.10587839825112191,
+      "val_accuracy": 0.9641943734015346
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.08967156069715333,
+      "train_accuracy": 0.9659449706811006,
+      "val_loss": 0.09962179976732224,
+      "val_accuracy": 0.9654731457800512
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.08163082037821755,
+      "train_accuracy": 0.970681100586378,
+      "val_loss": 0.09577804786698593,
+      "val_accuracy": 0.9718670076726342
+    }
+  ],
+  "best_checkpoint": {
+    "epoch": 5,
+    "val_loss": 0.09577804786698593,
+    "val_accuracy": 0.9718670076726342,
+    "path": "/kaggle/working/chest-xray-project/models/resnet18_baseline_repro_best.pth"
+  },
+  "evaluation_status": {
+    "precision": "not_evaluated",
+    "recall": "not_evaluated",
+    "f1": "not_evaluated",
+    "roc_auc": "not_evaluated",
+    "confusion_matrix": "not_evaluated",
+    "sealed_test": "not_evaluated"
+  },
+  "artifacts": {
+    "checkpoint": {
+      "filename": "resnet18_baseline_repro_best.pth",
+      "sha256": "6CE6CE66FE4334475E2C9EAF4573F92189A77DC2FCB7F7379C265B313E05B2A3",
+      "size_bytes": 44802749
+    }
+  }
+}
