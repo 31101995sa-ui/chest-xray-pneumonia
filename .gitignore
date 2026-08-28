@@ -24,3 +24,6 @@ models/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Local deployment archives
+/chest-xray-project.zip
