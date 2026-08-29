@@ -1,0 +1,40 @@
+{
+  "split": "test",
+  "test_policy": "Models and training configurations were selected using validation data before opening the test split.",
+  "models": [
+    {
+      "model": "resnet18_baseline",
+      "checkpoint": "resnet18_baseline_repro_best.pth",
+      "checkpoint_epoch": 5,
+      "samples": 624,
+      "metrics": {
+        "accuracy": 0.8253205128205128,
+        "precision": 0.787321063394683,
+        "recall": 0.9871794871794872,
+        "f1": 0.875995449374289,
+        "roc_auc": 0.9557747096208635,
+        "true_negative": 130,
+        "false_positive": 104,
+        "false_negative": 5,
+        "true_positive": 385
+      }
+    },
+    {
+      "model": "efficientnet_b0_baseline",
+      "checkpoint": "efficientnet_b0_baseline_best.pth",
+      "checkpoint_epoch": 5,
+      "samples": 624,
+      "metrics": {
+        "accuracy": 0.8205128205128205,
+        "precision": 0.7848360655737705,
+        "recall": 0.982051282051282,
+        "f1": 0.8724373576309795,
+        "roc_auc": 0.9477865439403902,
+        "true_negative": 129,
+        "false_positive": 105,
+        "false_negative": 7,
+        "true_positive": 383
+      }
+    }
+  ]
+}
