@@ -1,0 +1,18 @@
+{
+  "model": "efficientnet_b0_baseline",
+  "split": "validation",
+  "samples": 782,
+  "checkpoint": "efficientnet_b0_baseline_best.pth",
+  "checkpoint_epoch": 5,
+  "metrics": {
+    "accuracy": 0.9475703324808185,
+    "precision": 0.967128027681661,
+    "recall": 0.9621342512908778,
+    "f1": 0.9646246764452114,
+    "roc_auc": 0.9893561452633562,
+    "true_negative": 182,
+    "false_positive": 19,
+    "false_negative": 22,
+    "true_positive": 559
+  }
+}

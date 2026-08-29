@@ -1,0 +1,91 @@
+{
+  "experiment_id": "efficientnet_b0_baseline_001",
+  "status": "completed",
+  "provenance": {
+    "git_commit": "bde37d696b6774a305d12a40ed62a6cbbbaf08f3",
+    "manifest_sha256": "0216660DC53CC9F196790FB8D342BC82BE9420B74184E93942E2F7B8258D52D1",
+    "random_seed": 42
+  },
+  "model": {
+    "architecture": "efficientnet_b0",
+    "pretrained": true,
+    "pretrained_source": "ImageNet weights via torchvision",
+    "freeze_backbone": true,
+    "num_classes": 2,
+    "total_parameters": 4010110,
+    "trainable_parameters": 2562
+  },
+  "dataset": {
+    "train_samples": 4434,
+    "validation_samples": 782,
+    "sealed_test_samples": 624
+  },
+  "training": {
+    "epochs": 5,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "optimizer": "AdamW",
+    "loss": "CrossEntropyLoss",
+    "device": "cuda",
+    "gpu": "Tesla T4",
+    "training_time_seconds": 500.845810274
+  },
+  "environment": {
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "platform": "Kaggle"
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.2187830677703796,
+      "train_accuracy": 0.9111411817771764,
+      "val_loss": 0.17629178459077235,
+      "val_accuracy": 0.9335038363171355
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.13714234749032508,
+      "train_accuracy": 0.9476770410464592,
+      "val_loss": 0.14887701409876042,
+      "val_accuracy": 0.9347826086956522
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.11469998758455952,
+      "train_accuracy": 0.9573748308525034,
+      "val_loss": 0.13181594979789707,
+      "val_accuracy": 0.9437340153452686
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.10236445269272249,
+      "train_accuracy": 0.9614343707713126,
+      "val_loss": 0.12215503246125663,
+      "val_accuracy": 0.948849104859335
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.09481638513613,
+      "train_accuracy": 0.9666215606675688,
+      "val_loss": 0.11851585504677518,
+      "val_accuracy": 0.9475703324808185
+    }
+  ],
+  "best_checkpoint": {
+    "epoch": 5,
+    "val_loss": 0.11851585504677518,
+    "val_accuracy": 0.9475703324808185,
+    "filename": "efficientnet_b0_baseline_best.pth",
+    "sha256": "FE31C3470696EE94E007D13418E394FA4237A9788DE53F77B96608D70CEF3E94",
+    "size_bytes": 16370075
+  },
+  "evaluation_status": {
+    "precision": "not_evaluated",
+    "recall": "not_evaluated",
+    "f1": "not_evaluated",
+    "roc_auc": "not_evaluated",
+    "confusion_matrix": "not_evaluated",
+    "sealed_test": "not_evaluated"
+  }
+}
