@@ -14,7 +14,13 @@ def train_one_epoch(
     device: torch.device,
 ) -> tuple[float, float]:
     model.eval()
-    model.fc.train()
+
+    for child in model.children():
+        if any(
+            parameter.requires_grad
+            for parameter in child.parameters()
+        ):
+            child.train()
 
     running_loss = 0.0
     correct_predictions = 0
