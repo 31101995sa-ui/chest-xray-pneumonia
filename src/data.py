@@ -50,14 +50,24 @@ def build_base_transform() -> transforms.Compose:
 
 
 def preprocess_image(
-    image_path: Path,
+    image_source: Path | str | Image.Image,
 ) -> torch.Tensor:
     transform = build_base_transform()
 
-    with Image.open(image_path) as image:
-        tensor = transform(image)
+    if isinstance(
+        image_source,
+        Image.Image,
+    ):
+        image = image_source.convert("RGB")
 
-    return tensor
+        return transform(image)
+
+    with Image.open(
+        image_source
+    ) as image:
+        image = image.convert("RGB")
+
+        return transform(image)
 
 
 class ChestXRayDataset(Dataset):
