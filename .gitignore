@@ -27,3 +27,10 @@ Thumbs.db
 
 # Local deployment archives
 /chest-xray-project.zip
+
+# Exported medical image examples
+reports/errors/false_positives/
+reports/errors/false_negatives/
+
+# Contact sheets contain source medical images
+reports/figures/*contact_sheet*.png
