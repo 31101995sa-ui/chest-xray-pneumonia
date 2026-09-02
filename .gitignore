@@ -34,3 +34,6 @@ reports/errors/false_negatives/
 
 # Contact sheets contain source medical images
 reports/figures/*contact_sheet*.png
+
+# Generated submission package
+/dist/
