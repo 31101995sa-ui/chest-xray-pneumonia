@@ -2,9 +2,10 @@ from pathlib import Path
 import sys
 
 import torch
+from PIL import Image
 
 from src.data import MANIFEST_PATH
-from src.predict import DEFAULT_CHECKPOINT_PATH, load_model, predict_file
+from src.predict import DEFAULT_CHECKPOINT_PATH, load_model, predict, predict_file
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -23,6 +24,15 @@ TEST_IMAGE_PATH = (
 def print_check(name: str, passed: bool, details: str = "") -> None:
     status = "OK" if passed else "FAILED"
     message = f"[{status}] {name}"
+
+    if details:
+        message += f": {details}"
+
+    print(message)
+
+
+def print_skipped(name: str, details: str = "") -> None:
+    message = f"[SKIPPED] {name}"
 
     if details:
         message += f": {details}"
@@ -67,12 +77,10 @@ def main() -> int:
     if not checkpoint_exists:
         print()
         print(
-            "The source repository is valid, but real inference cannot "
-            "be verified without the trained checkpoint."
+            "The source repository is valid, but real model inference "
+            "cannot be verified without the trained checkpoint."
         )
-        print(
-            "Expected checkpoint:"
-        )
+        print("Expected checkpoint:")
         print(DEFAULT_CHECKPOINT_PATH)
         return 1
 
@@ -92,19 +100,57 @@ def main() -> int:
         f"device={device}",
     )
 
-    if not TEST_IMAGE_PATH.exists():
+    # Always perform a real forward pass without requiring the raw dataset.
+    try:
+        synthetic_image = Image.new(
+            mode="L",
+            size=(224, 224),
+            color=128,
+        )
+
+        synthetic_result = predict(
+            image=synthetic_image,
+            model=model,
+            device=device,
+        )
+
+        probability = synthetic_result["probability"]
+
+        synthetic_valid = (
+            synthetic_result["prediction"] in {"NORMAL", "PNEUMONIA"}
+            and 0.0 <= probability <= 1.0
+            and synthetic_result["model"] == "resnet18_baseline"
+        )
+
+    except Exception as error:
         print_check(
-            "Real inference sample",
+            "Synthetic inference",
             False,
-            f"test image not found: {TEST_IMAGE_PATH}",
+            str(error),
+        )
+        return 1
+
+    print_check(
+        "Synthetic inference",
+        synthetic_valid,
+        (
+            f"prediction={synthetic_result['prediction']}, "
+            f"P(PNEUMONIA)={probability:.6f}"
+        ),
+    )
+
+    if not synthetic_valid:
+        return 1
+
+    # Optional reproducibility check using a known dataset sample.
+    if not TEST_IMAGE_PATH.exists():
+        print_skipped(
+            "Known reference inference",
+            "raw dataset is not available",
         )
 
         print()
-        print(
-            "Model loading succeeded. "
-            "Real inference was skipped because the raw dataset "
-            "is not available."
-        )
+        print("PROJECT VERIFICATION PASSED")
         return 0
 
     try:
@@ -115,22 +161,13 @@ def main() -> int:
         )
     except Exception as error:
         print_check(
-            "Real inference",
+            "Known reference inference",
             False,
             str(error),
         )
         return 1
 
     probability = result["probability"]
-
-    print_check(
-        "Real inference",
-        True,
-        (
-            f"prediction={result['prediction']}, "
-            f"P(PNEUMONIA)={probability:.6f}"
-        ),
-    )
 
     expected_prediction = "PNEUMONIA"
     expected_probability = 0.9999955892562866
@@ -139,11 +176,11 @@ def main() -> int:
     probability_matches = abs(probability - expected_probability) < 1e-5
 
     print_check(
-        "Known reference prediction",
+        "Known reference inference",
         prediction_matches and probability_matches,
         (
-            f"expected={expected_prediction}, "
-            f"expected_probability≈{expected_probability:.6f}"
+            f"prediction={result['prediction']}, "
+            f"P(PNEUMONIA)={probability:.6f}"
         ),
     )
 
