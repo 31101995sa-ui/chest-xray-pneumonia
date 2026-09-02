@@ -42,6 +42,184 @@ AUTOMATED TESTS
 > **Educational / research prototype only.**
 > Not intended for clinical diagnosis, treatment decisions, or medical use.
 
+
+---
+
+# Quick Start
+
+This section provides the shortest path from a fresh repository checkout to a working project.
+
+## 1. Create a virtual environment
+
+Recommended Python version:
+
+```text
+Python 3.12
+```
+
+Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+If Windows path-length limitations prevent creation of a local `.venv`, an external environment can be used instead:
+
+```powershell
+python -m venv C:\venvs\xray
+C:\venvs\xray\Scripts\Activate.ps1
+```
+
+## 2. Install dependencies
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Check dependency consistency:
+
+```powershell
+python -m pip check
+```
+
+Expected result:
+
+```text
+No broken requirements found.
+```
+
+## 3. Run automated tests
+
+```powershell
+python -m pytest -v
+```
+
+Current expected result:
+
+```text
+7 passed
+```
+
+The automated API tests use a lightweight dummy model, so the test suite does not require the trained `.pth` checkpoint.
+
+## 4. Add the trained model checkpoint
+
+The trained model checkpoint is intentionally not stored in Git.
+
+For real inference and API predictions, place the selected ResNet18 checkpoint at:
+
+```text
+models/resnet18_baseline_repro_best.pth
+```
+
+Expected structure:
+
+```text
+chest-xray-pneumonia/
+└── models/
+    └── resnet18_baseline_repro_best.pth
+```
+
+The raw medical dataset is not required for normal API inference.
+
+## 5. Verify the project
+
+Run:
+
+```powershell
+python -m scripts.verify_project
+```
+
+The verification script checks:
+
+```text
+Python environment
+PyTorch
+split manifest
+model checkpoint
+model loading
+real inference, when the reference dataset image is available
+```
+
+A successful full local verification ends with:
+
+```text
+PROJECT VERIFICATION PASSED
+```
+
+If the raw dataset is not installed locally, the reference-image inference check may be skipped after successful model loading.
+
+## 6. Start the API
+
+```powershell
+python -m uvicorn api.main:app
+```
+
+The API will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+Swagger UI:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Health check:
+
+```text
+GET /health
+```
+
+Prediction:
+
+```text
+POST /predict
+```
+
+Upload an image using the `file` field.
+
+Example response:
+
+```json
+{
+  "prediction": "PNEUMONIA",
+  "probability": 0.9999955892562866,
+  "model": "resnet18_baseline",
+  "disclaimer": "Educational/research use only. Not intended for clinical diagnosis."
+}
+```
+
+The `probability` field always represents:
+
+```text
+P(PNEUMONIA)
+```
+
+## Quick verification sequence
+
+For an already prepared environment with the checkpoint installed:
+
+```powershell
+python -m pip check
+python -m pytest -v
+python -m scripts.verify_project
+python -m uvicorn api.main:app
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+> The project is an educational/research prototype and is not intended for clinical use.
+
+---
 ---
 
 # 1. Task

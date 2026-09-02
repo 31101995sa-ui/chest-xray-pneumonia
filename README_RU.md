@@ -42,6 +42,194 @@ AUTOMATED TESTS
 > **Только учебное / исследовательское использование.**
 > Проект не предназначен для клинической диагностики, выбора лечения или принятия медицинских решений.
 
+
+---
+
+# Быстрый старт
+
+Этот раздел показывает самый короткий путь от полученного репозитория до работающего проекта.
+
+## 1. Создать виртуальное окружение
+
+Рекомендуемая версия Python:
+
+```text
+Python 3.12
+```
+
+Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+Если из-за ограничения длины путей Windows локальное `.venv` создать не удаётся, можно использовать внешнее окружение:
+
+```powershell
+python -m venv C:\venvs\xray
+C:\venvs\xray\Scripts\Activate.ps1
+```
+
+## 2. Установить зависимости
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Проверить целостность зависимостей:
+
+```powershell
+python -m pip check
+```
+
+Ожидаемый результат:
+
+```text
+No broken requirements found.
+```
+
+## 3. Запустить автоматические тесты
+
+```powershell
+python -m pytest -v
+```
+
+Текущий ожидаемый результат:
+
+```text
+7 passed
+```
+
+API-тесты используют лёгкую DummyModel, поэтому для запуска `pytest` настоящий `.pth` checkpoint не требуется.
+
+## 4. Добавить checkpoint обученной модели
+
+Checkpoint намеренно не хранится в Git.
+
+Для запуска реального inference и API необходимо поместить выбранную модель ResNet18 по пути:
+
+```text
+models/resnet18_baseline_repro_best.pth
+```
+
+Ожидаемая структура:
+
+```text
+chest-xray-pneumonia/
+└── models/
+    └── resnet18_baseline_repro_best.pth
+```
+
+Исходный медицинский датасет для обычной работы API не требуется.
+
+## 5. Проверить проект
+
+Запустить:
+
+```powershell
+python -m scripts.verify_project
+```
+
+Verification script проверяет:
+
+```text
+Python environment
+PyTorch
+split manifest
+model checkpoint
+model loading
+real inference, если доступно контрольное изображение из датасета
+```
+
+При полном успешном локальном прогоне вывод заканчивается строкой:
+
+```text
+PROJECT VERIFICATION PASSED
+```
+
+Если raw dataset на компьютере отсутствует, проверка inference на контрольном изображении может быть пропущена после успешной загрузки модели.
+
+## 6. Запустить API
+
+```powershell
+python -m uvicorn api.main:app
+```
+
+API будет доступен по адресу:
+
+```text
+http://127.0.0.1:8000
+```
+
+Swagger UI:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Проверка сервиса:
+
+```text
+GET /health
+```
+
+Получение prediction:
+
+```text
+POST /predict
+```
+
+Изображение передаётся через поле:
+
+```text
+file
+```
+
+Пример ответа:
+
+```json
+{
+  "prediction": "PNEUMONIA",
+  "probability": 0.9999955892562866,
+  "model": "resnet18_baseline",
+  "disclaimer": "Educational/research use only. Not intended for clinical diagnosis."
+}
+```
+
+Поле:
+
+```text
+probability
+```
+
+всегда означает:
+
+```text
+P(PNEUMONIA)
+```
+
+## Короткая последовательность проверки
+
+Если окружение уже создано, зависимости установлены, а checkpoint находится на месте:
+
+```powershell
+python -m pip check
+python -m pytest -v
+python -m scripts.verify_project
+python -m uvicorn api.main:app
+```
+
+После этого открыть:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+> Проект является учебным / исследовательским прототипом и не предназначен для клинического использования.
+
+---
 ---
 
 # 1. Постановка задачи
